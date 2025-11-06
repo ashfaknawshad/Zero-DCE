@@ -15,7 +15,7 @@ from PIL import Image
 import glob
 import time
 
-
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
  
 def lowlight(image_path):
 	os.environ['CUDA_VISIBLE_DEVICES']='0'
@@ -28,10 +28,10 @@ def lowlight(image_path):
 
 	data_lowlight = torch.from_numpy(data_lowlight).float()
 	data_lowlight = data_lowlight.permute(2,0,1)
-	data_lowlight = data_lowlight.cuda().unsqueeze(0)
+	data_lowlight = data_lowlight.to(device).unsqueeze(0)
 
-	DCE_net = model.enhance_net_nopool().cuda()
-	DCE_net.load_state_dict(torch.load('snapshots/Epoch99.pth'))
+	DCE_net = model.enhance_net_nopool().to(device)
+	DCE_net.load_state_dict(torch.load('snapshots/Epoch99.pth', map_location=device))
 	start = time.time()
 	_,enhanced_image,_ = DCE_net(data_lowlight)
 
@@ -39,8 +39,9 @@ def lowlight(image_path):
 	print(end_time)
 	image_path = image_path.replace('test_data','result')
 	result_path = image_path
-	if not os.path.exists(image_path.replace('/'+image_path.split("/")[-1],'')):
-		os.makedirs(image_path.replace('/'+image_path.split("/")[-1],''))
+	result_dir = os.path.dirname(result_path)
+	if not os.path.exists(result_dir):
+		os.makedirs(result_dir)
 
 	torchvision.utils.save_image(enhanced_image, result_path)
 
