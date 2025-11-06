@@ -1,5 +1,15 @@
 # Zero-Reference Deep Curve Estimation for Low-Light Image Enhancement
 
+> **⚠️ This is a modified fork with CPU support!** 
+> 
+> ✅ Works on machines **without GPU/CUDA**  
+> ✅ Automatic device detection (uses GPU if available, otherwise CPU)  
+> ✅ Windows-compatible path handling  
+> 
+> See [MODIFICATIONS.md](MODIFICATIONS.md) for details on changes made.
+>
+> **Original repository**: [Li-Chongyi/Zero-DCE](https://github.com/Li-Chongyi/Zero-DCE)
+
 You can find more details here: https://li-chongyi.github.io/Proj_Zero-DCE.html. Have fun!
 
 **The implementation of Zero-DCE is for non-commercial use only.**
@@ -10,11 +20,16 @@ We also provide a MindSpore version of our code: https://pan.baidu.com/s/1uyLBEB
 Pytorch implementation of Zero-DCE
 
 ## Requirements
-1. Python 3.7 
-2. Pytorch 1.0.0
+1. Python 3.7+ (tested with Python 3.13)
+2. PyTorch (any recent version with CPU support)
 3. opencv
-4. torchvision 0.2.1
-5. cuda 10.0
+4. torchvision
+5. ~~cuda 10.0~~ **CUDA is now optional!** Works on CPU-only machines.
+
+**Quick install:**
+```bash
+pip install torch torchvision opencv-python pillow numpy
+```
 
 Zero-DCE does not need special configurations. Just basic environment. 
 
@@ -45,7 +60,9 @@ cd Zero-DCE_code
 ```
 python lowlight_test.py 
 ```
-The script will process the images in the sub-folders of "test_data" folder and make a new folder "result" in the "data". You can find the enhanced images in the "result" folder.
+The script will automatically detect if you have a GPU and use it, otherwise it will run on CPU (slower but works!). It will process the images in the sub-folders of "test_data" folder and make a new folder "result" in the "data". You can find the enhanced images in the "result" folder.
+
+**Note**: CPU processing is slower (~7 seconds per image). If you have a CUDA-capable GPU, install the GPU version of PyTorch for faster processing.
 
 ### Train: 
 1) cd Zero-DCE_code
